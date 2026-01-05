@@ -1,0 +1,17 @@
+# ===== FRONTEND (Angular) =====
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-error.log*
+
+# ===== BACKEND (.NET) =====
+bin/
+obj/
+.vs/
+*.user
+*.suo
+
+# ===== COMMON =====
+.env
+.env.*
