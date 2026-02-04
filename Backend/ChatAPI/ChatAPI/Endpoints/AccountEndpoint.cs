@@ -4,6 +4,9 @@ using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc;
 using ChatAPI.Common;
 using ChatAPI.Services;
+using ChatAPI.DTOs;
+using ChatAPI.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatAPI.Endpoints
 {
@@ -44,18 +47,51 @@ namespace ChatAPI.Endpoints
 
                 if (!result.Succeeded)
                 {
-                    return Results.BadRequest(Response<string>.Failure(result.
-                        Errors.Select(x => x.Description).FirstOrDefault()!));
+                    var messages = result.Errors.Select(e => e.Description);
+                    Console.WriteLine("Identity errors: " + string.Join(", ", messages));
+
+                    return Results.BadRequest(Response<string>.Failure(string.Join(", ", messages)));
                 }
 
                 return Results.Ok(Response<string>.Success("", "User created sucessfully."));
 
             }).DisableAntiforgery();
 
-            group.MapPost("/login", async (UserManager<AppUser> userManager, TokenService tokenService) =>
+            group.MapPost("/login", async (UserManager<AppUser> userManager, TokenService tokenService, LoginDto dto) =>
             {
+                if (dto is null)
+                {
+                    return Results.BadRequest(Response<string>.Failure("Invalid login details"));
+                }
 
+                var user = await userManager.FindByEmailAsync(dto.Email);
+
+                if (user == null)
+                {
+                    return Results.BadRequest(Response<string>.Failure("User not found"));
+                }
+
+                var result = await userManager.CheckPasswordAsync(user!, dto.Password);
+
+                if (!result)
+                {
+                    return Results.BadRequest(Response<string>.Failure("Invalid password"));
+                }
+
+                var token = tokenService.GenerateToken(user.Id, user.UserName!);
+
+                return Results.Ok(Response<string>.Success(token, "Login successfully"));
             });
+
+            group.MapGet("/me", async (HttpContext context, UserManager<AppUser> userManager) =>
+            {
+                var currentLoggedInUserId = context.User.GetUserId()!;
+
+                var currentLoggedInUser = await userManager.Users.SingleOrDefaultAsync(x => x.Id == currentLoggedInUserId
+                .ToString());
+
+                return Results.Ok(Response<AppUser>.Success(currentLoggedInUser!, "User fetched successfully"));
+            }).RequireAuthorization();
 
             return group;
         }

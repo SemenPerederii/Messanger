@@ -1,4 +1,5 @@
-﻿namespace ChatAPI.Services
+﻿
+namespace ChatAPI.Services
 {
     public class FileUpload
     {
