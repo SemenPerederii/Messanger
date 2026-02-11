@@ -8,7 +8,7 @@ import { User } from '../models/user';
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = 'https://localhost:5000/api/account';
+  private baseUrl = 'https://localhost:5001/api/account';
   private token = 'token';
 
   private httpClient = inject(HttpClient);
@@ -60,5 +60,15 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!localStorage.getItem(this.token);
+  }
+
+  logout() {
+    localStorage.removeItem(this.token);
+    localStorage.removeItem('user');
+  }
+
+  get currentLoggedUser(): User | null {
+    const user: User = JSON.parse(localStorage.getItem('user') || '{}');
+    return user;
   }
 }

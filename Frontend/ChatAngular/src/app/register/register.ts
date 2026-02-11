@@ -8,12 +8,19 @@ import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ApiResponse } from '../models/api-response';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [MatFormFieldModule, MatIconModule, MatButtonModule, MatInputModule, FormsModule],
+  imports: [
+    MatFormFieldModule,
+    MatIconModule,
+    MatButtonModule,
+    MatInputModule,
+    FormsModule,
+    RouterLink,
+  ],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })

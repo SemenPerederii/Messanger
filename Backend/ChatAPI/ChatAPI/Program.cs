@@ -12,15 +12,14 @@ using ChatAPI.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(
-    option =>
-    {
-        option.AddDefaultPolicy(builder =>
-        {
-            builder.WithOrigins("http://localhost:4200", "http://localhost:4200")
-            .AllowAnyHeader().AllowAnyMethod().AllowCredentials();
-        });
-    });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
 var JwtSetting = builder.Configuration.GetSection("JWTSettings");
 
@@ -64,7 +63,7 @@ builder.Services.AddAuthentication(options =>
             var accessToken = context.Request.Query["access_token"];
             var path = context.HttpContext.Request.Path;
 
-            if (!string.IsNullOrEmpty( accessToken ) && path.StartsWithSegments("/hus"))
+            if (!string.IsNullOrEmpty( accessToken ) && path.StartsWithSegments("/hubs/chat"))
             {
                 context.Token = accessToken;
             }
@@ -88,15 +87,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseCors(x => x.AllowAnyHeader().AllowAnyHeader()
-.AllowCredentials()
-.WithOrigins("http://localhost:4200", "http://localhost:4200"));
 
-
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStaticFiles();
-app.MapHub<ChatHub>("hubs/chat");
+app.MapHub<ChatHub>("/hubs/chat");
 app.MapAccountEndpoint();
 
 app.MapGet("/", () => "Server is running!");

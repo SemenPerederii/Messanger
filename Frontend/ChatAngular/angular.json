@@ -24,10 +24,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/material-theme.scss",
-              "src/styles.css"
-            ]
+            "styles": ["src/material-theme.scss", "src/styles.css"]
           },
           "configurations": {
             "production": {
@@ -55,6 +52,10 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "host": "0.0.0.0",
+            "allowedHosts": ["sustainable-intersystem-celsa.ngrok-free.dev"]
+          },
           "configurations": {
             "production": {
               "buildTarget": "WebShopAngular:build:production"
