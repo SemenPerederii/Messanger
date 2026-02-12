@@ -14,11 +14,13 @@
         <mat-icon class="cursor-pointer hover:text-red-500">video_call</mat-icon>
       </div>
     </div>
-    <div>test</div>
+    <div><app-chat-box></app-chat-box></div>
 
     <div class="absolute flex items-center bottom-0 border-t w-full bg-white p-4">
       <input
         type="text"
+        (input)="chatService.notifyTyping()"
+        (keydown.enter)="sendMessage()"
         [(ngModel)]="message"
         class="w-full bg-gray-200 focus:outline-none text-gray-900 rounded-full px-6 p-2"
         placeholder="Type message..."
