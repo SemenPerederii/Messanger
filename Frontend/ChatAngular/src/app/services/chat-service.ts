@@ -44,4 +44,22 @@ export class ChatService {
       this.hubConnection.stop().catch((error) => console.log(error));
     }
   }
+
+  status(userName: string): string {
+    const currentChatUser = this.currentOpenedChat();
+    if (!currentChatUser) {
+      return 'offline';
+    }
+
+    const onlineUser = this.onlineUsers().find((user) => user.userName === userName);
+
+    return onlineUser?.isTyping ? 'Typing...' : this.isUserOnline();
+  }
+
+  isUserOnline(): string {
+    let onlineUser = this.onlineUsers().find(
+      (user) => user.userName === this.currentOpenedChat()?.userName,
+    );
+    return onlineUser?.isOnline ? 'online' : this.currentOpenedChat()!.userName;
+  }
 }

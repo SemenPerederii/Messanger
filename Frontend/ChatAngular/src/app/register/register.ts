@@ -65,8 +65,14 @@ export class Register {
     formData.append('profileImage', this.profileImage!);
 
     this.authService.register(formData).subscribe({
-      next: (res) => console.log('Success', res),
-      error: (err) => console.log('Error', err),
+      next: (res) => {
+        console.log('Success', res);
+        this.snackBar.open('User created', 'Close');
+      },
+      error: (err) => {
+        console.log('Error', err);
+        this.snackBar.open(err.error.error, 'Close');
+      },
     });
   }
 }
