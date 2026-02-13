@@ -73,6 +73,7 @@ export class ChatBox implements AfterViewChecked {
   loadMoreMessage() {
     this.pageNumber++;
     this.chatService.loadMessages(this.pageNumber);
+    this.scrollTop();
   }
 
   ngAfterViewChecked(): void {
@@ -85,6 +86,14 @@ export class ChatBox implements AfterViewChecked {
     this.chatService.autoScrollEnabled.set(true);
     this.chatBox!.nativeElement.scrollTo({
       top: this.chatBox!.nativeElement.scrollHeight,
+      behavior: 'smooth',
+    });
+  }
+
+  scrollTop() {
+    this.chatService.autoScrollEnabled.set(false);
+    this.chatBox!.nativeElement.scrollTo({
+      top: 0,
       behavior: 'smooth',
     });
   }

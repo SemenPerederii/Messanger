@@ -72,8 +72,8 @@ export class ChatService {
     });
 
     this.hubConnection!.on('ReceiveNewMessage', (message: Message) => {
-      document.title = '(1) New Message';
       this.chatMessages.update((messages) => [...messages, message]);
+      document.title = `(${this.chatMessages().length + 1}) New Message`;
     });
   }
 
@@ -142,5 +142,9 @@ export class ChatService {
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  clearMessages() {
+    this.chatMessages.set([]);
   }
 }

@@ -31,7 +31,9 @@ export class ChatSidebar implements OnInit {
   }
 
   openChatWindow(user: User) {
+    this.chatService.clearMessages();
     this.chatService.currentOpenedChat.set(user);
     this.chatService.loadMessages(1);
+    document.title = this.chatService.currentOpenedChat()!.fullName;
   }
 }
