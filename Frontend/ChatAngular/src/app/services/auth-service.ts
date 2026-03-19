@@ -3,12 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { ApiResponse } from '../models/api-response';
 import { User } from '../models/user';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl = 'https://localhost:5001/api/account';
+  private baseUrl = environment.baseUrlAuth
   private token = 'token';
 
   private httpClient = inject(HttpClient);
